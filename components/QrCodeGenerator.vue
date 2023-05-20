@@ -1,5 +1,6 @@
 <template>
     <div>
+        <input v-model="qrCodeValue" type="text">
       <button @click="generateQRCode">Generate QR Code</button>
       <div v-if="generatedQRCode">
         <h2>Generated QR Code:</h2>
@@ -13,10 +14,11 @@
   import QRCode from 'qrcode'
   
   const generatedQRCode = ref<string | null>(null);
-  
+  const qrCodeValue = ref<string | null>(null);
+
   async function generateQRCode() {
-    const data = 'qr1';
-    generatedQRCode.value = await QRCode.toDataURL(data);
+    const data = '1';
+    generatedQRCode.value = await QRCode.toDataURL(qrCodeValue.value);
   }
   </script>
   

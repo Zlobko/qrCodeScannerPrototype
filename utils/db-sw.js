@@ -20,7 +20,7 @@ async function openDB() {
   });
 }
 
-export async function addToDB(data) {
+async function addToDB(data) {
     const db = await openDB();
     const transaction = db.transaction(STORE_NAME, 'readwrite');
     const store = transaction.objectStore(STORE_NAME);
@@ -37,7 +37,7 @@ export async function addToDB(data) {
     });
   }
 
-export async function getAllFromDB() {
+async function getAllFromDB() {
   const db = await openDB();
   const transaction = db.transaction(STORE_NAME, 'readonly');
   const store = transaction.objectStore(STORE_NAME);
@@ -54,10 +54,14 @@ export async function getAllFromDB() {
   });
 }
 
-export async function clearDB() {
+async function clearDB() {
     const db = await openDB();
     const transaction = db.transaction(STORE_NAME, 'readwrite');
     const store = transaction.objectStore(STORE_NAME);
     await store.clear();
     await transaction.done;
   }
+
+self.addToDB = addToDB;
+self.getAllFromDB = getAllFromDB;
+self.clearDB = clearDB;

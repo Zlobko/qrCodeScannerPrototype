@@ -4,7 +4,6 @@
     <p v-if="qrData">{{ qrData.content }}</p>
     <p v-else>Loading...</p>
     <div>Qr code:{{ String(qrCode) }}</div>
-    <button @click="onClickHandler" >bla</button>
   </div>
 </template>
 
@@ -28,13 +27,6 @@ watchEffect(async () => {
     qrData.value = null;
   }
 });
-
-const onClickHandler = async() =>{
-  const data = await getAllFromDB();
-  qrData.value = data.find((item) => item.id === test);
-  console.log(qrData)
- 
-}
 
 </script>
 

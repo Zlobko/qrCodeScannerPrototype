@@ -1,25 +1,56 @@
 <template>
     <div>
       <button @click="addDummyData">Add Dummy Data</button>
+      <button @click="lookAtDummyData">Console log idexedDB</button>
+      <button @click="clearIndexedDBData">Clear IndexedDB Data</button>
     </div>
   </template>
   
   <script setup lang="ts">
-  import { addToDB, getAllFromDB } from '~/utils/db';
+  import { addToDB, getAllFromDB,clearDB  } from '~/utils/db';
+  
+  // Add this function to register the service worker
+  async function registerServiceWorker() {
+    if ('serviceWorker' in navigator) {
+      try {
+        await navigator.serviceWorker.register('/sw.js');
+        console.log('Service worker registered successfully');
+      } catch (e) {
+        console.error('Service worker registration failed:', e);
+      }
+    }
+  }
+  
+  registerServiceWorker();
   
   async function addDummyData() {
-    const dummyData = [
-      { id: 'qr1', content: 'QR code 1 content' },
-      { id: 'qr2', content: 'QR code 2 content' },
-      { id: 'qr3', content: 'QR code 3 content' },
-    ];
+    try {
+      const response = await fetch('https://6443d57990738aa7c078a5c0.mockapi.io/api/data/objects');
+      const data = await response.json();
+      console.log('Fetched data:', data); // Log the fetched data
+
   
-    for (const data of dummyData) {
-      await addToDB(data); // Pass the entire data object instead of data.content
-      alert(data);
+      for (const item of data) {
+        await addToDB(item);
+      }
+  
+      const allData = await getAllFromDB();
+      console.log('All Data:', allData);
+    } catch (error) {
+        const allData = await getAllFromDB();
+      console.error('Failed to fetch data from the API:', error);
+      console.log(allData)
     }
-  
-    // Fetch all data from IndexedDB
+  }
+  async function clearIndexedDBData() {
+  try {
+    await clearDB();
+    console.log('IndexedDB data cleared');
+  } catch (error) {
+    console.error('Failed to clear IndexedDB data:', error);
+  }
+}
+  async function lookAtDummyData() {
     const allData = await getAllFromDB();
     console.log('All Data:', allData);
   }
